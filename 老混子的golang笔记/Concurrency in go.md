@@ -27,4 +27,14 @@
 * Go语言遵循的是一个fork-join的并发模型，fork是一个节点，在这个节点处会将程序分叉，同时运行，join就是在某一时刻，分支和主干汇合。
 * 了解“sync包”中的waitgroup add（表示几个goroutine开始），wait（阻塞main上的goroutine），done（表明已经退出）。
 * 互斥锁与读写锁 ***Mutex*** 是互斥的意思，就是一种请求对临界区独占的方式，在使用完后释放互斥锁。(当一个 goroutine 获得了 Mutex 后，其他 goroutine 就只能乖乖等到这个 goroutine 释放该 Mutex。)
-* sync.REMutex 在概念上是和互斥是一样的，但是它会让你对内存有了更多的控制。在读锁占用的情况下，会阻止写，但不阻止读，也就是多个 goroutine 可同时获取读锁（调用 RLock() 方法；而写锁（调用 Lock() 方法）会阻止任何其他 goroutine（无论读和写）进来，整个锁相当于由该 goroutine 独占。从 RWMutex 的实现看，RWMutex 类型其实组合了 Mutex：
+* sync.REMutex 在概念上是和互斥是一样的，但是它会让你对内存有了更多的控制。在读锁占用的情况下，会阻止写，但不阻止读，也就是多个 goroutine 可同时获取读锁（调用 RLock() 方法；而写锁（调用 Lock() 方法）会阻止任何其他 goroutine（无论读和写）进来，整个锁相当于由该 goroutine 独占。从 RWMutex 的实现看，RWMutex 类型其实组合了 Mutex。通常建议使用的是RWMutex。
+* 池 work-pool 我的理解就是任务数多于开的goroutine的数量，用来防止泄露
+* channel先声明然后初始化 
+
+        ```go
+var dataStream chan interface{}
+dataStream = make(chan interface{})
+        ```
+
+其中第二行的make，最好声明一下通道的容量 ~~我试了一下，写的不好会出现死锁~~
+
