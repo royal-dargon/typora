@@ -96,7 +96,8 @@ for _, s := range []string{"a", "b", "c"} {
 }
 ```
 
-* 防止goroutine泄露
+* 防止goroutine泄露    ~~说不明白~~
+* 错误处理  ~~说不明白~~
 
 
 
