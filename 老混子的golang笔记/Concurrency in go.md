@@ -48,18 +48,16 @@ dataStream = make(chan interface{})
 
 ​      当然也是可以声明一个只允许接收或者发送的通道（通常使用在函数的参数中或者是函数的返回值中）
 
-     ```go
- var dataStream <-chan interface{}
- dataStream := make(<-chan interface{})
-     ```
-
+```go
+  var dataStream <-chan interface{}
+ dataStream := make(<-chan interface{})  
+```
 ​      这是只允许读取的channelgo
 
-     ```go
+```go
 var dataStream chan<- interface{}
 dataStream := make(chan<- interface{})
-     ```
-
+```
 ​      这是只允许发送到其nondeterministic中的通道类型
 
 ```go
