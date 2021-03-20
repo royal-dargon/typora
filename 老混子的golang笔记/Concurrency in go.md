@@ -22,19 +22,85 @@
 ### 第三章
 
 * 每一个Go程序至少有一个goroutine。简单来说，这是一个并发的函数，添加关键字go来触发
+
 * Go语言中的goroutine是独一无二的，它们是一个更高级别的抽象，称为协程。(轻量级线程)，不能被中断，但是有很多point，允许暂停和重新进入。
+
 * Go语言的主机托管机制是一个名为m:n调度器实现，这意味着它将M个绿色线程（由语言运行平台进行调度）映射到N个OS线程
+
 * Go语言遵循的是一个fork-join的并发模型，fork是一个节点，在这个节点处会将程序分叉，同时运行，join就是在某一时刻，分支和主干汇合。
+
 * 了解“sync包”中的waitgroup add（表示几个goroutine开始），wait（阻塞main上的goroutine），done（表明已经退出）。
+
 * 互斥锁与读写锁 ***Mutex*** 是互斥的意思，就是一种请求对临界区独占的方式，在使用完后释放互斥锁。(当一个 goroutine 获得了 Mutex 后，其他 goroutine 就只能乖乖等到这个 goroutine 释放该 Mutex。)
+
 * sync.REMutex 在概念上是和互斥是一样的，但是它会让你对内存有了更多的控制。在读锁占用的情况下，会阻止写，但不阻止读，也就是多个 goroutine 可同时获取读锁（调用 RLock() 方法；而写锁（调用 Lock() 方法）会阻止任何其他 goroutine（无论读和写）进来，整个锁相当于由该 goroutine 独占。从 RWMutex 的实现看，RWMutex 类型其实组合了 Mutex。通常建议使用的是RWMutex。
+
 * 池 work-pool 我的理解就是任务数多于开的goroutine的数量，用来防止泄露
+
 * channel先声明然后初始化 
 
-        ```go
+    ```go
 var dataStream chan interface{}
 dataStream = make(chan interface{})
-        ```
+    ```
 
-其中第二行的make，最好声明一下通道的容量 ~~我试了一下，写的不好会出现死锁~~
+​      ***其中第二行的make，最好声明一下通道的容量 ~~我试了一下，写的不好会出现死锁~~***
+
+​      当然也是可以声明一个只允许接收或者发送的通道（通常使用在函数的参数中或者是函数的返回值中）
+
+     ```go
+ var dataStream <-chan interface{}
+ dataStream := make(<-chan interface{})
+     ```
+
+​      这是只允许读取的channelgo
+
+     ```go
+var dataStream chan<- interface{}
+dataStream := make(chan<- interface{})
+     ```
+
+​      这是只允许发送到其nondeterministic中的通道类型
+
+```go
+var receiveChan <-chan interface{}
+var sendChan chan<- interface{}
+dataStream := make(chan interface{})
+// Valid statements:
+receiveChan = dataStream
+sendChan = dataStream
+```
+
+<- 这个操作在返回的时候可以返回两个值
+
+```go
+stringStream := make(chan string)
+go func() {
+stringStream <- "Hello channels!"
+}()
+salutation, ok := <-stringStream
+fmt.Printf("(%v): %v", ok, salutation)
+```
+
+### 第四章 
+
+~~只看了for-select，防止泄露和错误处理~~
+
+* for-select  循环的方式有无限循环和range循环
+
+```go
+for _, s := range []string{"a", "b", "c"} {
+	select {
+		case <-done:
+			return
+		case stringStream <- s:
+	}
+}
+```
+
+* 防止goroutine泄露
+
+
+
+
 
