@@ -50,7 +50,7 @@ dataStream = make(chan interface{})
 
 ```go
   var dataStream <-chan interface{}
- dataStream := make(<-chan interface{})  
+ dataStream = make(<-chan interface{})  
 ```
 ​      这是只允许读取的channelgo
 
