@@ -90,3 +90,62 @@ for sum < 100 {}
 
 * `go` 的 `case` 和 `c`的还是有些的区别的，就是匹配成功后会跳出整个`switch` ，当然也是可以用`fallthrough` 来强制执行下面的内容的。
 
+##### 面向对象
+
+###### method
+
+* `go` 里面的面向对象可以通过 `method` 来实现
+
+```go
+
+package main
+
+import (
+    "fmt"
+    "math"
+)
+
+type Rectangle struct {
+    width, height float64
+}
+
+type Circle struct {
+    radius float64
+}
+
+func (r Rectangle) area() float64 {
+    return r.width*r.height
+}
+
+func (c Circle) area() float64 {
+    return c.radius * c.radius * math.Pi
+}
+
+func main() {
+    r1 := Rectangle{12, 2}
+    r2 := Rectangle{9, 4}
+    c1 := Circle{10}
+    c2 := Circle{25}
+
+    fmt.Println("Area of r1 is: ", r1.area())
+    fmt.Println("Area of r2 is: ", r2.area())
+    fmt.Println("Area of c1 is: ", c1.area())
+    fmt.Println("Area of c2 is: ", c2.area())
+}
+```
+
+##### web 基础
+
+###### web 工作方式
+
+* 输入的 `url` 会通过 `DNS` 服务进行解析获取	域名相对应的`Ip`
+
+###### `http` 的请求包
+
+* 请求包分为3部分，第一部分叫请求行，第二部分叫请求头，第三部分是主体。`header` 和 `body` 之间有个空行
+
+###### GO 搭建一个web服务器
+
+###### Go 如何使得web进行工作
+
+* 服务端有处理请求，进行相应，连接和处理器的几个概念
