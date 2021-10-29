@@ -149,3 +149,76 @@ func main() {
 ###### Go 如何使得web进行工作
 
 * 服务端有处理请求，进行相应，连接和处理器的几个概念
+
+###### `http` 包的详解
+
+* `servemux`   (多路复用器) 的自定义
+
+  ```go
+  
+  type ServeMux struct {
+      mu sync.RWMutex   // 锁，由于请求涉及到并发处理，因此这里需要一个锁机制
+      m  map[string]muxEntry  // 路由规则，一个 string 对应一个 mux 实体，这里的 string 就是注册的路由表达式
+      hosts bool // 是否在任意的规则中带有 host 信息
+  }
+  ```
+
+
+
+##### 表单
+
+* handler 里面有一种方法可以自动解析form
+
+  ```go
+  r.ParseForm() 
+  ```
+
+#### 数据库
+
+##### `database/sql` 接口
+
+###### `sql.Register` 
+
+这个是用来注册数据库的驱动的，是实现在 `init` 函数里的。
+
+```go
+Register(name string, driver driver,Driver)
+```
+
+同时，`database/sql` 在内部通过一个`map` 来存储用户定义的相应驱动。因此是可以注册多个驱动的
+
+###### `driver.Driver`
+
+`Driver` 是一个数据库驱动的接口，定义了一个`method： Open (name string)` 返回的是一个数据库的连接
+
+###### `driver.Conn` 
+
+`Conn` 是一个数据库连接的接口定义，定义了一系列的方法，这个`Conn` 只能应用在一个`go` 协程中。
+
+```go
+// Prepare主要是返回与当前连接相关的执行Sql语句的准备状态，可以进行查询，删除等操作
+// Close 是关闭，释放连接资源
+// Begin 是返回一个代表事物处理的Tx？？？
+type Conn interface {
+    Prepare(query string) (Stmt, error)
+    Close() error
+    Begin() (Tx, error)
+}
+```
+
+###### diver.Stmt
+
+`Stmt` 是一种准备好的状态
+
+```go
+type Stmt interface {
+    Close() error
+    NumInput() int
+    Exec(args []Value) (Result, error)
+    Query(args []Value) (Rows, error)
+}
+```
+
+###### driver.Tx
+
+事物处理，递交或者回滚
