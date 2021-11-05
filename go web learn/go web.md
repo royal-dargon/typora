@@ -222,3 +222,26 @@ type Stmt interface {
 ###### driver.Tx
 
 事物处理，递交或者回滚
+
+#### `session` 和数据存储
+
+* `cookie` 与 `session` 的区别 前者是丢给客户端的，后者是丢给服务端
+
+* `session` 就是在服务器上保存用户操作的历史信息
+
+* go 也有自己设置 cookie 的方式
+
+  ```go
+  import "net/http"
+  
+  http.SetCookie(w ResponseWrite, cookie * Cookie)
+  ```
+
+* `go` 实现 session 管理
+
+  * 定义全局的管理器
+  * 保证sessionid的全局唯一性
+  * 为每个客户关联一个session
+  * session 的存储
+  * session 的过期处理
+
